@@ -23,7 +23,6 @@ class FirebaseDataReceiver {
                 val projects = ArrayList<ProjectModel>()
                 for (data in snapshot.children) {
                     val post = data.getValue<ProjectModel>()
-                    Log.d("res", "Re data = ${post.toString()}")
                     projects.add(post ?: ProjectModel())
                 }
                 onSuccess(projects)
