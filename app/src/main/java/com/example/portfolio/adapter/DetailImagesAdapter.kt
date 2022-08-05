@@ -2,18 +2,19 @@ package com.example.portfolio.adapter
 
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import com.example.portfolio.OnClick
 import com.example.portfolio.R
-import com.example.portfolio.data.models.ProjectModel
-import com.example.portfolio.databinding.AndroidItemBinding
+import com.example.portfolio.databinding.DetailImageItemBinding
+import com.example.portfolio.databinding.ImageItemBinding
 import com.example.portfolio.databinding.TypeItemBinding
-import com.example.portfolio.toImageList
 import com.squareup.picasso.Picasso
 import java.util.*
 
@@ -22,46 +23,41 @@ import java.util.*
  * @Date: 01/08/2022
  */
 
-class ProjectAdapter :
+
+class DetailImagesAdapter :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    val currentList = ArrayList<ProjectModel>()
+    val currentList = ArrayList<String>()
 
-    fun submitData(list: List<ProjectModel>) {
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun submitData(image: List<String>) {
         currentList.clear()
-        currentList.addAll(list)
+        currentList.addAll(image)
         notifyDataSetChanged()
     }
 
-    var onClick: OnClick<ProjectModel>? = null
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return VhProject(AndroidItemBinding.inflate(LayoutInflater.from(parent.context),
-            parent,
-            false),
-            onClick)
+        return VhDetailImages(
+            DetailImageItemBinding.inflate(LayoutInflater.from(parent.context),
+                parent,
+                false),
+        )
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as VhProject).bind(currentList[position])
+        (holder as VhDetailImages).bind(currentList[position])
     }
 
     override fun getItemCount(): Int = currentList.size
 }
 
-private class VhProject(
- private val binding: AndroidItemBinding,
- private val onClick: OnClick<ProjectModel>?,
+private class VhDetailImages(
+    private val binding: DetailImageItemBinding,
 ) :
     RecyclerView.ViewHolder(binding.root) {
     @RequiresApi(Build.VERSION_CODES.M)
-    fun bind(project: ProjectModel) {
-        binding.descTv.text = project.description
-        binding.titleTv.text = project.title
-        Picasso.get().load(project.images.toImageList()[0]).into(binding.img)
-        binding.root.setOnClickListener {
-            onClick?.onClick(project)
-        }
+    fun bind(image: String) {
+        Picasso.get().load(image).into(binding.icon)
     }
 }

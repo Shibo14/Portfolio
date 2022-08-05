@@ -1,10 +1,13 @@
 package com.example.portfolio.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.portfolio.DetailActivity
+import com.example.portfolio.OnClick
 import com.example.portfolio.adapter.ProjectAdapter
 import com.example.portfolio.data.FirebaseDataReceiver
 import com.example.portfolio.databinding.AndroidFragmentBinding
@@ -32,6 +35,12 @@ class AndroidFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         adapter = ProjectAdapter()
         binding.rvAndroid.adapter = adapter
+
+        adapter.onClick = OnClick {
+            var intent = Intent(requireContext(), DetailActivity::class.java)
+            intent.putExtra("project",it)
+            startActivity(intent)
+        }
 
         FirebaseDataReceiver().getProjects {
             adapter.submitData(it)
