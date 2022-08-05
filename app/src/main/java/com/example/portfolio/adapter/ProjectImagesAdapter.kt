@@ -36,26 +36,24 @@ class ProjectImagesAdapter :
         currentList.add(ImageModel(null, isImage = false))
     }
 
-    var selectedType = ""
-
     @RequiresApi(Build.VERSION_CODES.N)
     fun submitData(image: ImageModel) {
         currentList.add(image)
         currentList.removeIf { !it.isImage }
-        currentList.add(ImageModel(null, isImage = false))
+        if (currentList.size < 10) {
+            currentList.add(ImageModel(null, isImage = false))
+        }
         notifyDataSetChanged()
     }
 
     var onClick: OnClick<Unit>? = null
+    var onRemove: OnClick<ImageModel>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return VhImages(ImageItemBinding.inflate(LayoutInflater.from(parent.context),
             parent,
             false),
-            onClick, OnClick {
-                currentList.remove(it)
-                notifyDataSetChanged()
-            })
+            onClick, onRemove)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)

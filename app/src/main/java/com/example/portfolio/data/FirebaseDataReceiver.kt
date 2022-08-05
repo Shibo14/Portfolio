@@ -17,13 +17,15 @@ class FirebaseDataReceiver {
     private val firebaseDatabase = FirebaseDatabase.getInstance()
     private val ref = firebaseDatabase.getReference("projects")
 
-    fun getProjects(onSuccess: (List<ProjectModel>) -> Unit) {
+    fun getProjects(onSuccess: (List<ProjectModel>) -> Unit, type: String) {
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val projects = ArrayList<ProjectModel>()
                 for (data in snapshot.children) {
                     val post = data.getValue<ProjectModel>()
-                    projects.add(post ?: ProjectModel())
+                    if (type == post?.type) {
+                        projects.add(post)
+                    }
                 }
                 onSuccess(projects)
             }

@@ -37,13 +37,13 @@ class AndroidFragment : Fragment() {
         binding.rvAndroid.adapter = adapter
 
         adapter.onClick = OnClick {
-            var intent = Intent(requireContext(), DetailActivity::class.java)
-            intent.putExtra("project",it)
+            val intent = Intent(requireContext(), DetailActivity::class.java)
+            intent.putExtra("project", it)
             startActivity(intent)
         }
 
-        FirebaseDataReceiver().getProjects {
+        FirebaseDataReceiver().getProjects(onSuccess = {
             adapter.submitData(it)
-        }
+        }, "android")
     }
 }

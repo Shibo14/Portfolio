@@ -44,6 +44,19 @@ class SendActivity : AppCompatActivity() {
             adapter.submitData(adapter.currentList.map { it.copy(isSelected = it.id == adapterType?.id) })
         }
 
+        adapterImages.onRemove = OnClick {
+            adapterImages.currentList.remove(it)
+            binding.counterTv.text = ("${adapterImages.currentList.filter { it.isImage }.size}/10")
+            val cacheImages = ArrayList<ImageModel>()
+            cacheImages.addAll(adapterImages.currentList)
+
+            adapterImages.currentList.clear()
+            cacheImages.forEach {
+                adapterImages.submitData(it)
+            }
+            adapterImages.notifyDataSetChanged()
+        }
+
         binding.sendBtn.setOnClickListener {
             binding.nestedView.isGone = true
             binding.progress.isGone = false
@@ -97,7 +110,7 @@ class SendActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let {
                 adapterImages.submitData(ImageModel(uri))
-                binding.counterTv.text = ("${adapterImages.currentList.size-1}/10")
+                binding.counterTv.text = ("${adapterImages.currentList.filter { it.isImage }.size}/10")
             }
         }
 }
