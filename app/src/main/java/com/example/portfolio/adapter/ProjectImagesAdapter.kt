@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import com.example.portfolio.OnClick
 import com.example.portfolio.R
@@ -51,7 +52,10 @@ class ProjectImagesAdapter :
         return VhImages(ImageItemBinding.inflate(LayoutInflater.from(parent.context),
             parent,
             false),
-            onClick)
+            onClick, OnClick {
+                currentList.remove(it)
+                notifyDataSetChanged()
+            })
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -62,7 +66,11 @@ class ProjectImagesAdapter :
     override fun getItemCount(): Int = currentList.size
 }
 
-private class VhImages(private val binding: ImageItemBinding, private val onClick: OnClick<Unit>?) :
+private class VhImages(
+    private val binding: ImageItemBinding,
+    private val onClick: OnClick<Unit>?,
+    private val onRemove: OnClick<ImageModel>?,
+) :
     RecyclerView.ViewHolder(binding.root) {
     @RequiresApi(Build.VERSION_CODES.M)
     fun bind(image: ImageModel) {
@@ -70,6 +78,12 @@ private class VhImages(private val binding: ImageItemBinding, private val onClic
             binding.icon.setImageURI(image.uri)
         } else {
             binding.icon.setImageResource(image.addImage)
+        }
+
+        binding.imgCard.isGone = !image.isImage
+
+        binding.removeBtn.setOnClickListener {
+            onRemove?.onClick(image)
         }
 
         binding.icon.setOnClickListener {

@@ -97,7 +97,7 @@ class SendActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let {
                 adapterImages.submitData(ImageModel(uri))
-                binding.counterTv.text = ("${adapterImages.currentList.size}/10")
+                binding.counterTv.text = ("${adapterImages.currentList.size-1}/10")
             }
         }
 }

@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Portfolio">
         <activity
+            android:name=".DetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".SendActivity"
             android:exported="false" />
         <activity
