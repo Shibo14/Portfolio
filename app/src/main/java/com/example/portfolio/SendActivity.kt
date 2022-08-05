@@ -4,8 +4,10 @@ import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.core.view.isGone
 import com.example.portfolio.adapter.ImageModel
 import com.example.portfolio.adapter.ProjectImagesAdapter
 import com.example.portfolio.adapter.ProjectTypeAdapter
@@ -14,10 +16,11 @@ import com.example.portfolio.data.FirebaseDataSender
 import com.example.portfolio.data.models.ProjectModel
 import com.example.portfolio.databinding.ActivitySendBinding
 import com.example.portfolio.databinding.AddLayoutBinding
+import com.google.firebase.storage.FirebaseStorage
 
 class SendActivity : AppCompatActivity() {
 
-    private lateinit var binding:ActivitySendBinding
+    private lateinit var binding: ActivitySendBinding
     private lateinit var adapter: ProjectTypeAdapter
     private lateinit var adapterImages: ProjectImagesAdapter
 
@@ -42,9 +45,47 @@ class SendActivity : AppCompatActivity() {
         }
 
         binding.sendBtn.setOnClickListener {
-            FirebaseDataSender().send(ProjectModel(title = binding.projectNameEdt.text.toString(),
-                description = binding.projectDescEdt.text.toString(), type = adapter.selectedType))
+            binding.nestedView.isGone = true
+            binding.progress.isGone = false
+            val imgUrls = ArrayList<String>()
+
+            val storage = FirebaseStorage.getInstance()
+            var uploadedCount = 0
+
+            adapterImages.currentList.forEach {
+                val ref = storage.getReference(System.currentTimeMillis().toString())
+
+                if(it.isImage) {
+
+                    ref.putFile(it.uri!!).addOnSuccessListener {
+
+                        ref.downloadUrl.addOnSuccessListener {
+                            imgUrls.add(it.toString())
+                        }.addOnCompleteListener {
+                            uploadedCount++
+
+                            if(adapterImages.currentList.size-1 == uploadedCount) {
+                                val project = ProjectModel("",
+                                    binding.projectNameEdt.text.toString(),
+                                    binding.projectDescEdt.text.toString(),
+                                    adapter.selectedType,
+                                    imgUrls.asString(), false)
+
+                                FirebaseDataSender().send(project) {
+                                    binding.nestedView.isGone = false
+                                    binding.progress.isGone = true
+                                    finish()
+                                }
+                            }
+                        }
+
+                    }.addOnCompleteListener {
+
+                    }
+                }
+            }
         }
+
 
         adapterImages.onClick = OnClick {
             selectImageFromGalleryResult.launch("image/*")
@@ -57,12 +98,6 @@ class SendActivity : AppCompatActivity() {
             uri?.let {
                 adapterImages.submitData(ImageModel(uri))
                 binding.counterTv.text = ("${adapterImages.currentList.size}/10")
-//                val storage = FirebaseStorage.getInstance()
-//                val ref = storage.getReference("project_images")
-//                ref.putFile(uri).addOnSuccessListener {
-//                    binding.sendBtn.text = it.uploadSessionUri.toString()
-//                }
-//                binding.type.icon.setImageURI(uri)
             }
         }
 }

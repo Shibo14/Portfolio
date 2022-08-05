@@ -17,7 +17,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 class FragmentController(
     private val activity: AppCompatActivity,
     private val fragments: List<Fragment>,
-) : ViewPager2.OnPageChangeCallback(){
+) : ViewPager2.OnPageChangeCallback() {
 
     private var viewPager2: ViewPager2 = activity.findViewById(R.id.pager)
     private var tabLayout: TabLayout
@@ -37,17 +37,20 @@ class FragmentController(
             (getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
         }
 
-        tabLayout.setOnTabSelectedListener(object :TabLayout.OnTabSelectedListener{
+        tabLayout.setOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                if(tab?.position == 1) {
+                if (tab?.position == 1) {
                     val intent = Intent(activity, SendActivity::class.java)
                     activity.startActivity(intent)
+                    viewPager2.currentItem = 0
                 }
-                tab!!.icon?.setColorFilter(activity.resources.getColor(R.color.to_right_color), PorterDuff.Mode.SRC_IN)
+                tab!!.icon?.setColorFilter(activity.resources.getColor(R.color.to_right_color),
+                    PorterDuff.Mode.SRC_IN)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
-                tab!!.icon?.setColorFilter(activity.resources.getColor(R.color.defColor), PorterDuff.Mode.SRC_IN)
+                tab!!.icon?.setColorFilter(activity.resources.getColor(R.color.defColor),
+                    PorterDuff.Mode.SRC_IN)
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
@@ -58,7 +61,8 @@ class FragmentController(
         TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
             when (position) {
                 0 -> {
-                    tab.icon = activity.resources.getDrawable(R.drawable.ic_baseline_phone_android_24)
+                    tab.icon =
+                        activity.resources.getDrawable(R.drawable.ic_baseline_phone_android_24)
                 }
 
                 1 -> {
