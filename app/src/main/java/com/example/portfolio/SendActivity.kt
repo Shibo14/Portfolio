@@ -37,6 +37,7 @@ class SendActivity : AppCompatActivity() {
         adapter.submitData(arrayListOf(
             Type(1, "android", R.drawable.ic_baseline_phone_android_24, false),
             Type(2, "web", R.drawable.ic_baseline_desktop_mac_24, false),
+            Type(2, "graphic", R.drawable.ic_baseline_grain_24, false),
         ))
 
         adapter.onClick = OnClick { adapterType ->

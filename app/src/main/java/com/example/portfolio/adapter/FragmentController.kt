@@ -39,11 +39,6 @@ class FragmentController(
 
         tabLayout.setOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                if (tab?.position == 1) {
-                    val intent = Intent(activity, SendActivity::class.java)
-                    activity.startActivity(intent)
-                    viewPager2.currentItem = 0
-                }
                 tab!!.icon?.setColorFilter(activity.resources.getColor(R.color.to_right_color),
                     PorterDuff.Mode.SRC_IN)
             }
@@ -66,7 +61,7 @@ class FragmentController(
                 }
 
                 1 -> {
-                    tab.icon = activity.resources.getDrawable(R.drawable.ic_baseline_add_24)
+                    tab.icon = activity.resources.getDrawable(R.drawable.ic_baseline_grain_24)
                 }
 
                 2 -> {

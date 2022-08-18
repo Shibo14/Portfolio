@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.portfolio.adapter.FragmentController
 import com.example.portfolio.databinding.ActivityMainBinding
-import com.example.portfolio.fragments.AddFragment
+import com.example.portfolio.fragments.GraphicsFragment
 import com.example.portfolio.fragments.AndroidFragment
 import com.example.portfolio.fragments.WebFragment
 
@@ -17,7 +17,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         supportActionBar?.hide()
         setContentView(binding.root)
-        FragmentController(this,listOf(AndroidFragment(),AddFragment(),WebFragment()))
+
+        FragmentController(this,listOf(AndroidFragment(),GraphicsFragment(),WebFragment()))
 
     }
 }
